@@ -35,7 +35,7 @@ jobs:
     - name: Construir y Subir Imagen Docker
       run: |
         # Esto genera el nombre exacto de la imagen automáticamente
-        IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/examen_aaee_eval3:latest
+        IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/hogwarts_backend_991:latest
         IMAGE_NAME=$(echo $IMAGE_NAME | tr '[A-Z]' '[a-z]')
         
         docker build -t $IMAGE_NAME .

@@ -1,0 +1,42 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v3
+
+    - name: Configurar Java JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: '23'
+        distribution: 'temurin'
+
+    - name: Construir proyecto con Maven
+      run: mvn clean package
+
+    - name: Login en GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        # Este token te lo da GitHub automáticamente, no tienes que crear nada
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Construir y Subir Imagen Docker
+      run: |
+        # Esto genera el nombre exacto de la imagen automáticamente
+        IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/examen_aaee_eval3:latest
+        IMAGE_NAME=$(echo $IMAGE_NAME | tr '[A-Z]' '[a-z]')
+        
+        docker build -t $IMAGE_NAME .
+        docker push $IMAGE_NAME

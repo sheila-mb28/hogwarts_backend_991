@@ -1,0 +1,9 @@
+services:
+  api:
+    image: ghcr.io/SHEILA-MB28/examen_aaee_eval3:latest
+    container_name: api_hogwarts
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    restart: always
